@@ -33,8 +33,7 @@ export const getDrones = async () => {
 	const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 	let	info = {};
 
-	// fetch('https://cors-anywhere.herokuapp.com/https://assignments.reaktor.com/birdnest/drones')
-	fetch(CORS_PROXY_URL + "https://assignments.reaktor.com/birdnest/drones", {
+	fetch("https://assignments.reaktor.com/birdnest/drones", {
 		method: "GET",
 		'access-control-allow-origin': '*',
 		headers: {
