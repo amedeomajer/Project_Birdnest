@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from 'react';
 
 
-import { Header, Footer } from './container'
-import { getDrones, getPilot } from './services/requests';
+import { Header, Footer, Visualizer } from './container'
+import { getPilot } from './services/requests';
+
+import io from 'socket.io-client';
 
 
 const App = () => {
-	const[ data , setData ]= useState();
-	useEffect(() => {
-		getDrones().then((response) => {
-			setData(response)
-		})
-	}, [])
+	const socket = io.connect("http://localhost:5000");
 
-
-	// })
 	return (
 		<div className='app'>
 			<Header />
+			<Visualizer socket={socket}/>
 			<Footer />
 		</div>
 	);

@@ -16,6 +16,7 @@
 import axios from 'axios';
 import { convertXML } from 'simple-xml-to-json'
 import { calculateDistance } from '../utils/calculateDistance';
+const baseUrl = 'http://localhost:5000/'
 
 const createDroneObject = (drone) => {
 	let	droneObject = {};
@@ -30,38 +31,22 @@ const createDroneObject = (drone) => {
 }
 
 export const getDrones = async () => {
-	const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 	let	info = {};
+	const data = await axios.get(`${baseUrl}drones`)
+	let		drones = [];
+	const	myJson = convertXML(data.data);
+	
+	info.time = myJson.report.children[1].capture.snapshotTimestamp;
+	myJson.report.children[1].capture.children.forEach(element => {
+		drones.push(createDroneObject(element))
+	});
+	info.drones = drones;
 
-	fetch("https://assignments.reaktor.com/birdnest/drones", {
-		method: "GET",
-		'access-control-allow-origin': '*',
-		headers: {
-			Accept: "application/xml",
-		},
-	})
-		.then((response) => {
-			console.log(response)
-			return response.text();
-		})
-		.then((data) => {
-			let		drones = [];
-			console.log(data)
-			const	myJson = convertXML(data);
-			info.time = myJson.report.children[1].capture.snapshotTimestamp;
-			myJson.report.children[1].capture.children.forEach(element => {
-				drones.push(createDroneObject(element))
-			});
-			info.drones = drones;
-		})
-		.catch((error) => {
-			console.log(error);
-		});
 	return	info;
 };
 
 export const getPilot = async (serialNumber) => {
-	return await axios.get(`https://cors-anywhere.herokuapp.com/https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`);
+	return await axios.get(`${baseUrl}pilots/${serialNumber}`);
 };
 
 
