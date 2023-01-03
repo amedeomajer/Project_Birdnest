@@ -5,7 +5,9 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "\"echo \\\"Error: no test specified\\\" && exit 1\"",
-		"dev": "nodemon index.js"
+		"dev": "nodemon index.js",
+		"init": "node create_db.js",
+		"init-dev": "npm run init && npm run dev"
 	},
 	"author": "Amedeo Majer",
 	"license": "ISC",

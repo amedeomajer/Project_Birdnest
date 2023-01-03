@@ -1,3 +1,4 @@
+const db = require("./config/db.js");
 const { default: axios } = require("axios")
 const express = require("express")
 const http = require('http');
@@ -6,10 +7,6 @@ const server = http.createServer(app);
 const socketServer = require('./socket.js');
 const port = 5000
 const cors = require('cors');
-const db = require("./config/db.js");
-
-
-
 
 app.use(cors({origin: 'http://localhost:3000'}))
 app.use(express.json())
@@ -34,5 +31,7 @@ app.get("/pilots", (request, response) => {
 
 socketServer.socketServer(server);
 server.listen(port, () => {
-	console.log(`Example app listening on port ${port}`)
+	console.log(`server listening on port ${port}`)
 })
+
+

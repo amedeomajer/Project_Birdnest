@@ -1,18 +1,29 @@
 const db = require("./config/db.js");
 const cron = require('node-cron');
-const createDroneObject = require('./utils.js').createDroneObject;
+const {createDroneObject, recordClosestPilot} = require('./utils.js');
 const axios = require('axios');
 
 const socketServer = (server) => {
+
+	let old_distance;
+	db.query('SELECT distance FROM closest_distance_recorded', (error, result) => {
+		if (error)
+			console.log('######################', error)
+		else {
+			
+			old_distance = result[0] === undefined ? undefined : result[0].distance;
+		}
+	})
+
 	const io = require("socket.io")(server, {
 		cors: {
 			origin: "http://localhost:3000",
 		},
 	});
-
 	cron.schedule('*/2 * * * * *', async () => {
 		const data = await axios.get("https://assignments.reaktor.com/birdnest/drones");
 		let info = await createDroneObject(data);
+		await recordClosestPilot(info);
 		io.emit("drones", info); // socket emit data//
 		const deleteSQL = 'DELETE FROM pilots WHERE lastSeen < NOW() - INTERVAL 10 MINUTE';
 		db.query(deleteSQL, (err, result) => {

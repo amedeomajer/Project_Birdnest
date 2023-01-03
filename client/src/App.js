@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 
-import { Header, Footer, Visualizer } from './container'
-import { getPilot } from './services/requests';
+import { Header, Footer, Body } from './container';
 
 import io from 'socket.io-client';
 
@@ -13,7 +12,7 @@ const App = () => {
 	return (
 		<div className='app'>
 			<Header />
-			<Visualizer socket={socket}/>
+			<Body socket={socket}/>
 			<Footer />
 		</div>
 	);

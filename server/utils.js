@@ -2,6 +2,32 @@ const { convertXML } = require('simple-xml-to-json');
 const axios = require('axios');
 const db = require('./config/db.js');
 
+const recordClosestPilot = async (info) => { // shits not working
+	
+	info.drones.sort((a, b) => {return a.distance - b.distance})
+
+	// console.log(old_distance.distance)
+	// console.log(info.drones[0].distance)
+	if (old_distance === undefined) {
+		console.log('here')
+		db.query('INSERT INTO closest_distance_recorded (distance) VALUES (?)', [info.drones[0].distance],
+		(error, result) => {
+			if (error)
+				console.log(error)
+		})
+		old_distance = info.drones[0].distance;
+		console.log(old_distance)
+	} else if (old_distance >= info.drones[0].distance) {
+		db.query('UPDATE TABLE closest_distance_recorded SET distance = ?, lastSeen = NOW() WHERE distance = ?', [info.drones[0].distance ,old_distance.distance],
+		(error, result) => {
+			if (error)
+			console.log(error)
+		})
+		old_distance = info.drones[0].distance;
+	}
+	resolve();
+}
+
 const calculateDistance = ( coordinates ) => {
 	// const nestCoordinates = { x : 250 , y : 250 };
 
@@ -10,12 +36,13 @@ const calculateDistance = ( coordinates ) => {
 	const x2 = 250;
 	const y2 = 250;
 	const distance = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+
 	return distance;
 }
+
 const getPilotInfo = async (drone) => {
 		let pilotInfo = {};
 		const result = await axios.get(`https://assignments.reaktor.com/birdnest/pilots/${drone.serialNumber}`)
-		console.log(result.data)
 		const firstName = result.data.firstName;
 		const lastName = result.data.lastName;
 		const email = result.data.email;
@@ -47,6 +74,7 @@ const getPilotInfo = async (drone) => {
 				})
 			}
 		})
+
 		return JSON.stringify(pilotInfo);
 }
 
@@ -60,6 +88,7 @@ const prepareDroneObject = async (drone) => {
 	if (droneObject.distance <= 100) {
 		droneObject.pilotInfo = await getPilotInfo(droneObject);
 	}
+
 	return	droneObject;
 }
 
@@ -72,12 +101,13 @@ const createDroneObject = async (data) => {
 	for (i = 0 ;i < myJson.report.children[1].capture.children.length; i++) {
 		const d = await prepareDroneObject(myJson.report.children[1].capture.children[i]);
 		drones.push(d);
-		//console.log('console.log(',i,') //', d)
 	}
 	info.drones = drones;
+
 	return info;
 }
 
 module.exports = {
 	createDroneObject,
+	recordClosestPilot,
 }

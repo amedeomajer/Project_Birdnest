@@ -2,7 +2,7 @@
 	width: 500px;
 	height: 500px;
 	background: black;
-	border:2px solid rgba(0, 218, 11, 0.396);
+	border:20px solid rgba(0, 0, 0, 0.396);
 	position: relative;
 }
 
@@ -35,3 +35,17 @@
 	left: 240px;
 }
 
+.visualizer-list-container {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-around;
+	margin-top: 15px;
+	font-family: sans-serif;
+}
+
+.pilots-list {
+	height: 540px;
+	width: 540px;
+	overflow-y: scroll;
+}
