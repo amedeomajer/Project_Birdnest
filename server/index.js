@@ -5,7 +5,8 @@ const app = express()
 const server = http.createServer(app);
 const socketServer = require('./socket.js');
 const port = 5000
-const cors = require('cors')
+const cors = require('cors');
+const db = require("./config/db.js");
 
 
 
@@ -19,11 +20,14 @@ axios
 	.then((result) => response.send(result.data))
 })
 
-app.get("/pilots/:id", (request, response) => {
-	const id = request.params.id
-	axios
-		.get(`https://assignments.reaktor.com/birdnest/pilots/${id}`)
-		.then((result) => response.json(result.data))
+app.get("/pilots", (request, response) => {
+	db.query('SELECT * FROM pilots ORDER BY lastSeen DESC', (err, result) => {
+		if (err) {
+			console.log('error getting pilots', err)
+		} else {
+			response.send(result)
+		}
+	})
 })
 
 

@@ -20,7 +20,8 @@ const getPilotInfo = async (drone) => {
 		const lastName = result.data.lastName;
 		const email = result.data.email;
 		const phone = result.data.phoneNumber;
-		pilotInfo.firstName = firstName;
+		const pilotId = result.data.pilotId;
+		pilotInfo.name = firstName;
 		pilotInfo.lastName = lastName;
 		pilotInfo.email = email;
 		pilotInfo.phone = phone;
@@ -31,8 +32,8 @@ const getPilotInfo = async (drone) => {
 			if (err) {
 				console.log(err)
 			} else if (result.length === 0) {
-				const insertSQL = 'INSERT INTO pilots (name, lastName, email, phone) VALUES (?, ?, ?, ?)';
-				db.query(insertSQL, [firstName, lastName, email, phone], (err, result) => {
+				const insertSQL = 'INSERT INTO pilots (name, lastName, email, phone, pilotId) VALUES (?, ?, ?, ?, ?)';
+				db.query(insertSQL, [firstName, lastName, email, phone, pilotId], (err, result) => {
 					if (err) {
 						console.log(err)
 					}
