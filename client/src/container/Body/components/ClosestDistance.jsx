@@ -14,7 +14,6 @@ const ClosestDistance = ({data}) => {
 	useEffect(() => {
 		if (data) {
 			const newDrones = data.drones.sort((a, b) => a.distance - b.distance)
-			console.log(newDrones)
 			if (newDrones[0].distance <= distance.distance) {
 				setDistance({
 					distance : newDrones[0].distance,
@@ -25,7 +24,6 @@ const ClosestDistance = ({data}) => {
 	}, [data])
 	if (distance) {
 		const date = distance.time.toLocaleString();
-		console.log(date)
 		return (
 			<div className="closest-distance" >
 				<h2>Closest recorded distance :</h2>

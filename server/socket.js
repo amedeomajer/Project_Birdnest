@@ -20,8 +20,6 @@ const socketServer = (server) => {
 		db.query(deleteSQL, (err, result) => {
 			if (err) {
 				console.log('error deleting old pilots', err)
-			} else if (result.affectedRows > 0) {
-				console.log('old pilots deleted')
 			}
 		})
 	});

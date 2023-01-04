@@ -27,10 +27,11 @@ const Visualizer = ({data}) => {
 				)
 			})
 			setDrones(tempDrones)
-			if (activeAudio === true)
-			audio.play().catch((error) => {
-				console.log('user has not interacted with page')
-			})
+			if (activeAudio === true) {
+				audio.play().catch((error) => {
+					console.log('user has not interacted with page')
+				})
+			}
 		}
 	}, [data])
 	const changeAudioOnOff = () => {

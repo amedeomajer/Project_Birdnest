@@ -17,8 +17,6 @@ const Body = ({socket}) => {
 		})
 	}, [socket])
 
-	
-
 	return (
 		<div className='visualizer-list-container'>
 			<Visualizer data={data} />
