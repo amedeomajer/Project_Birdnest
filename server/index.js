@@ -11,10 +11,14 @@ const cors = require('cors');
 app.use(cors({origin: 'http://localhost:3000'}))
 app.use(express.json())
 
-app.get("/drones", (request, response) => {
-axios
-	.get("https://assignments.reaktor.com/birdnest/drones")
-	.then((result) => response.send(result.data))
+app.get("/distance", (request, response) => {
+	db.query('SELECT * FROM closest_distance_recorded', (err, result) => {
+		if (err) {
+			console.log('error getting pilots', err)
+		} else {
+			response.send(result)
+		}
+	})
 })
 
 app.get("/pilots", (request, response) => {

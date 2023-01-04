@@ -1,0 +1,19 @@
+* {
+	background-color: blue;
+	color: white;
+	font-family: 'IBM Plex Mono', monospace;
+}
+
+*::-webkit-scrollbar {
+	width: 23px;
+}
+
+*::-webkit-scrollbar-track {
+	background: #adadad;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: #666666;
+	border-radius: 0px;
+	border: 2px solid #c4c4c4;
+}

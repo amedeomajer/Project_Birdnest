@@ -4,17 +4,8 @@ const {createDroneObject, recordClosestPilot} = require('./utils.js');
 const axios = require('axios');
 
 const socketServer = (server) => {
-
-	let old_distance;
-	db.query('SELECT distance FROM closest_distance_recorded', (error, result) => {
-		if (error)
-			console.log('######################', error)
-		else {
-			
-			old_distance = result[0] === undefined ? undefined : result[0].distance;
-		}
-	})
-
+	
+	
 	const io = require("socket.io")(server, {
 		cors: {
 			origin: "http://localhost:3000",

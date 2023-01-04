@@ -4,7 +4,7 @@ import './Header.css'
 const Header = () => {
 	return (
 		<div className='header'>
-			<h1>THE BIRDNEST PROJECT</h1>
+			<h1>THE BIRDNEST MONITRON 3000</h1>
 		</div>
 	);
 };

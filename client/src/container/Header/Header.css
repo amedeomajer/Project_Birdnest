@@ -1,5 +1,12 @@
 .header {
 	display: flex;
 	justify-content: center;
-	font-family: sans-serif;
+	box-shadow: 0 2px white, 0 -2px #7d7d7d, -2px -2px #7d7d7d, 2px 2px white, -2px 2px #7d7d7d, 2px -2px white;
+	background: #c0c0c0;
+}
+
+h1 {
+	box-shadow: 0 2px white, 0 -2px #7d7d7d, -2px -2px #7d7d7d, 2px 2px white, -2px 2px #7d7d7d, 2px -2px white;
+	background: #c0c0c0;
+	color: black;
 }
