@@ -1,5 +1,4 @@
 const db = require("./config/db.js");
-const { default: axios } = require("axios")
 const express = require("express")
 const http = require('http');
 const app = express()
@@ -34,7 +33,7 @@ app.get("/pilots", (request, response) => {
 
 
 socketServer.socketServer(server);
-server.listen(port, () => {
+server.listen(process.nextTick.PORT | port, () => {
 	console.log(`server listening on port ${port}`)
 })
 

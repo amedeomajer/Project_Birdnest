@@ -2,9 +2,11 @@ const mysql = require('mysql');
 
 
 const con = mysql.createConnection({
-	host: '127.0.0.1',
+	host: 'birdnest-db-instance.cvn7kyut8xid.eu-north-1.rds.amazonaws.com',
+	port: '3306',
 	user: 'root',
-	password: ''
+	password: 'adastraperaspera',
+	database : 'birdnestdb',
 });
 
 con.connect(async (error) => {
