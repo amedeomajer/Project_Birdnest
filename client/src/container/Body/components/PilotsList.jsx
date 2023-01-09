@@ -8,22 +8,24 @@ const PilotsList = ({data}) => {
 
 	useEffect(() => {
 		getPilots().then(response => {
-			response.data.forEach(pilot => {
-				pilot.lastSeen = new Date(pilot.lastSeen)
-			})
-			setPilots(response.data)
+			if (response.data !== undefined) {
+				response.data.forEach(pilot => {
+					pilot.lastseen = new Date(pilot.lastseen)
+				})
+				setPilots(response.data)
+			}
 		})
 	}, [data])
 
 	return (
 		<div className='pilots-list'>
 			{pilots.map(pilot => {
-				const hours = pad(pilot.lastSeen.getHours());
-				const minutes = pad(pilot.lastSeen.getMinutes());
-				const seconds = pad(pilot.lastSeen.getSeconds());
+				const hours = pad(pilot.lastseen.getHours());
+				const minutes = pad(pilot.lastseen.getMinutes());
+				const seconds = pad(pilot.lastseen.getSeconds());
 				return (
-					<div className='pilot-element' key={pilot.pilotId}>
-						<p>{hours}:{minutes}:{seconds} -- {pilot.name} {pilot.lastName}</p>
+					<div className='pilot-element' key={pilot.pilotid}>
+						<p>{hours}:{minutes}:{seconds} -- {pilot.name} {pilot.lastname}</p>
 						<p>{pilot.phone} - - {pilot.email}</p>
 					</div>
 				)

@@ -7,10 +7,13 @@ const ClosestDistance = ({data}) => {
 
 	useEffect(() => {
 		getClosestDistance().then((response) => {
-			response.data[0].time = new Date(response.data[0].lastSeen)
-			setDistance(response.data[0])
+			if (response.data !== '') {
+				response.data.time = new Date(response.data.lastseen)
+				setDistance(response.data)
+			}
 		})
 	}, [])
+
 	useEffect(() => {
 		if (data) {
 			const newDrones = data.drones.sort((a, b) => a.distance - b.distance)
@@ -22,6 +25,7 @@ const ClosestDistance = ({data}) => {
 			}
 		}
 	}, [data])
+
 	if (distance) {
 		const date = distance.time.toLocaleString();
 		return (

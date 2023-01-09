@@ -1,4 +1,4 @@
-const db = require("./config/db.js");
+const db = require("./db");
 const express = require("express")
 const http = require('http');
 const app = express()
@@ -10,24 +10,14 @@ const cors = require('cors');
 app.use(cors({origin: 'http://localhost:3000'}))
 app.use(express.json())
 
-app.get("/distance", (request, response) => {
-	db.query('SELECT * FROM closest_distance_recorded', (err, result) => {
-		if (err) {
-			console.log('error getting pilots', err)
-		} else {
-			response.send(result)
-		}
-	})
+app.get("/distance", async (request, response) => {
+	const { rows } = await db.query('SELECT * FROM closest_distance_recorded')
+	response.send(rows[0]);
 })
 
-app.get("/pilots", (request, response) => {
-	db.query('SELECT * FROM pilots ORDER BY lastSeen DESC', (err, result) => {
-		if (err) {
-			console.log('error getting pilots', err)
-		} else {
-			response.send(result)
-		}
-	})
+app.get("/pilots", async (request, response) => {
+	const { rows } = await db.query('SELECT * FROM pilots ORDER BY lastSeen DESC');
+	response.send(rows);
 })
 
 

@@ -1,31 +1,18 @@
 const { convertXML } = require('simple-xml-to-json');
 const axios = require('axios');
-const db = require('./config/db.js');
+const db = require('./db');
 
-const recordClosestPilot = async (info) => { // shits not working
+const recordClosestPilot = async (info) => {
 
-	db.query('SELECT distance FROM closest_distance_recorded', (error, result) => {
-		if (error)
-			console.log(error)
-		else {
-			const old_distance = result[0] === undefined ? undefined : result[0].distance;
-			const distances = info.drones.map((drone) => drone.distance)
-			distances.sort((a, b) => a - b)
-			if (old_distance === undefined) {
-				db.query('INSERT INTO closest_distance_recorded (distance) VALUES (?)', [distances[0]],
-				(error, result) => {
-					if (error)
-						console.log(error)
-				})
-			} else if (old_distance >= distances[0]) {
-				db.query('UPDATE closest_distance_recorded SET distance = ?, lastSeen = NOW() WHERE distance = ?', [distances[0] ,old_distance],
-				(error, result) => {
-					if (error)
-					console.log(error)
-				})
-			}
-		}
-	})
+	const { rows } = await db.query('SELECT distance FROM closest_distance_recorded');
+	const old_distance = rows[0] === undefined ? undefined : rows[0].distance;
+	const distances = info.drones.map((drone) => drone.distance)
+	distances.sort((a, b) => a - b)
+	if (old_distance === undefined)
+		await db.query('INSERT INTO closest_distance_recorded (distance) VALUES ($1)', [distances[0]]);
+	else if (old_distance >= distances[0])
+		await db.query('UPDATE closest_distance_recorded SET distance = $1, lastSeen = NOW() WHERE distance = $2', [distances[0] ,old_distance]);
+	return true;
 }
 
 const calculateDistance = ( coordinates ) => {
@@ -42,7 +29,10 @@ const calculateDistance = ( coordinates ) => {
 
 const getPilotInfo = async (drone) => {
 		let pilotInfo = {};
+		console.log('begin', new Date().getMinutes(), '-', new Date().getSeconds())
 		const result = await axios.get(`https://assignments.reaktor.com/birdnest/pilots/${drone.serialNumber}`)
+		if (result)
+			console.log('end', new Date().getMinutes(), '-', new Date().getSeconds())
 		if (result.status !== 404) {
 			const firstName = result.data.firstName;
 			const lastName = result.data.lastName;
@@ -54,28 +44,15 @@ const getPilotInfo = async (drone) => {
 			pilotInfo.email = email;
 			pilotInfo.phone = phone;
 			pilotInfo.pilotId = result.data.pilotId;
-
-			const checkIfALreadyPresentSQL = 'SELECT * FROM pilots WHERE email = ? AND phone = ? AND name = ? AND lastName = ?';
-			db.query(checkIfALreadyPresentSQL, [email, phone, firstName, lastName], (err, result) => {
-				if (err) {
-					console.log(err)
-				} else if (result.length === 0) {
-					const insertSQL = 'INSERT INTO pilots (name, lastName, email, phone, pilotId) VALUES (?, ?, ?, ?, ?)';
-					db.query(insertSQL, [firstName, lastName, email, phone, pilotId], (err, result) => {
-						if (err) {
-							console.log(err)
-						}
-					})
-				} else {
-					const updateSQL = 'UPDATE pilots SET lastSeen = NOW() WHERE id = ?';
-					db.query(updateSQL, [result[0].id], (err, result) => {
-						if (err) {
-							console.log(err)
-						}
-					})
-				}
-			})
-
+			const checkIfALreadyPresentSQL = 'SELECT * FROM pilots WHERE email = $1 AND phone = $2 AND name = $3 AND lastName = $4';
+			const { rows } = await db.query(checkIfALreadyPresentSQL, [email, phone, firstName, lastName]);
+			if (rows.length === 0) {
+				const insertSQL = 'INSERT INTO pilots (name, lastName, email, phone, pilotId) VALUES ($1, $2, $3, $4, $5)';
+				db.query(insertSQL, [firstName, lastName, email, phone, pilotId]);
+			} else {
+				const updateSQL = 'UPDATE pilots SET lastSeen = NOW() WHERE id = $1';
+				db.query(updateSQL, [result[0].id])
+			}
 			return JSON.stringify(pilotInfo);
 		} else {
 			return null;

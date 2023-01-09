@@ -11,11 +11,10 @@ const Body = ({socket}) => {
 
 	const [ data , setData ] = useState();
 
-	useEffect(() => {
 		socket.on('drones', (info) => {
+			console.log(new Date().getSeconds())
 			setData(info)
 		})
-	}, [socket])
 
 	return (
 		<div className='visualizer-list-container'>
