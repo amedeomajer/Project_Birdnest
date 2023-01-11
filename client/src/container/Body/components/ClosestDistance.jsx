@@ -15,8 +15,10 @@ const ClosestDistance = ({data}) => {
 	}, [])
 
 	useEffect(() => {
-		if (data) {
+		if (data && distance) {
+			console.log('data.drones', data.drones)
 			const newDrones = data.drones.sort((a, b) => a.distance - b.distance)
+			console.log('new drones', newDrones)
 			if (newDrones[0].distance <= distance.distance) {
 				setDistance({
 					distance : newDrones[0].distance,

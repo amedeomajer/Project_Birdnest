@@ -26,7 +26,7 @@ const PilotsList = ({data}) => {
 				return (
 					<div className='pilot-element' key={pilot.pilotid}>
 						<p>{hours}:{minutes}:{seconds} -- {pilot.name} {pilot.lastname}</p>
-						<p>{pilot.phone} - - {pilot.email}</p>
+						<p>{pilot.phone} -- {pilot.email}</p>
 					</div>
 				)
 			})}

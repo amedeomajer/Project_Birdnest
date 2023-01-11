@@ -28,35 +28,37 @@ const calculateDistance = ( coordinates ) => {
 }
 
 const getPilotInfo = async (drone) => {
-		let pilotInfo = {};
-		console.log('begin', new Date().getMinutes(), '-', new Date().getSeconds())
-		const result = await axios.get(`https://assignments.reaktor.com/birdnest/pilots/${drone.serialNumber}`)
-		if (result)
-			console.log('end', new Date().getMinutes(), '-', new Date().getSeconds())
-		if (result.status !== 404) {
-			const firstName = result.data.firstName;
-			const lastName = result.data.lastName;
-			const email = result.data.email;
-			const phone = result.data.phoneNumber;
-			const pilotId = result.data.pilotId;
-			pilotInfo.name = firstName;
-			pilotInfo.lastName = lastName;
-			pilotInfo.email = email;
-			pilotInfo.phone = phone;
-			pilotInfo.pilotId = result.data.pilotId;
-			const checkIfALreadyPresentSQL = 'SELECT * FROM pilots WHERE email = $1 AND phone = $2 AND name = $3 AND lastName = $4';
-			const { rows } = await db.query(checkIfALreadyPresentSQL, [email, phone, firstName, lastName]);
-			if (rows.length === 0) {
-				const insertSQL = 'INSERT INTO pilots (name, lastName, email, phone, pilotId) VALUES ($1, $2, $3, $4, $5)';
-				db.query(insertSQL, [firstName, lastName, email, phone, pilotId]);
+		try {
+			let pilotInfo = {};
+			const result = await axios.get(`https://assignments.reaktor.com/birdnest/pilots/${drone.serialNumber}`)
+			if (result.status !== 404) {
+				const firstName = result.data.firstName;
+				const lastName = result.data.lastName;
+				const email = result.data.email;
+				const phone = result.data.phoneNumber;
+				const pilotId = result.data.pilotId;
+				pilotInfo.name = firstName;
+				pilotInfo.lastName = lastName;
+				pilotInfo.email = email;
+				pilotInfo.phone = phone;
+				pilotInfo.pilotId = result.data.pilotId;
+				const checkIfALreadyPresentSQL = 'SELECT * FROM pilots WHERE email = $1 AND phone = $2 AND name = $3 AND lastName = $4';
+				const { rows } = await db.query(checkIfALreadyPresentSQL, [email, phone, firstName, lastName]);
+				if (rows.length === 0) {
+					const insertSQL = 'INSERT INTO pilots (name, lastName, email, phone, pilotId) VALUES ($1, $2, $3, $4, $5)';
+					db.query(insertSQL, [firstName, lastName, email, phone, pilotId]);
+				} else {
+					const updateSQL = 'UPDATE pilots SET lastSeen = NOW() WHERE id = $1';
+					db.query(updateSQL, [rows[0].id])
+				}
+				return JSON.stringify(pilotInfo);
 			} else {
-				const updateSQL = 'UPDATE pilots SET lastSeen = NOW() WHERE id = $1';
-				db.query(updateSQL, [result[0].id])
+				return null;
 			}
-			return JSON.stringify(pilotInfo);
-		} else {
-			return null;
+		} catch (error) {
+			console.log(error)
 		}
+		
 }
 
 const prepareDroneObject = async (drone) => {

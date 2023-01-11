@@ -11,18 +11,24 @@ const Body = ({socket}) => {
 
 	const [ data , setData ] = useState();
 
+	useEffect(() => {
 		socket.on('drones', (info) => {
-			console.log(new Date().getSeconds())
 			setData(info)
 		})
-
-	return (
-		<div className='visualizer-list-container'>
-			<Visualizer data={data} />
-			<PilotsList data={data} />
-			<ClosestDistance data={data} />
-		</div>
-	)
+		return () => socket.off('drones');
+	}, [socket])
+	if (data) {
+		return (
+			<div className='visualizer-list-container'>
+				<Visualizer data={data} />
+				<PilotsList data={data} />
+				<ClosestDistance data={data} />
+			</div>
+		)
+	} else {
+		return <h1>LOADING ...</h1>
+	}
+	
 }
 
 export default Body
