@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:5000/'
+const baseUrl = '/api/'
 
 export const getPilots = async () => {
 	return await axios.get(`${baseUrl}pilots`);

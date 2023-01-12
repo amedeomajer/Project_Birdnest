@@ -5,11 +5,7 @@ const axios = require('axios');
 
 const socketServer = (server) => {
 
-	const io = require("socket.io")(server, {
-		cors: {
-			origin: "http://localhost:3000",
-		},
-	});
+	const io = require("socket.io")(server);
 	
 	cron.schedule('*/2 * * * * *', async () => {
 		const data = await axios.get("https://assignments.reaktor.com/birdnest/drones");

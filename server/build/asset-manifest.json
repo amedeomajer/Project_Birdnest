@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ff3e6be5.css",
+    "main.js": "/static/js/main.c7be3b02.js",
+    "static/media/audio-icon-on.png": "/static/media/audio-icon-on.10e56c071beabfbd882a.png",
+    "static/media/audio-icon-off.png": "/static/media/audio-icon-off.a5ef8208b06da2b6e914.png",
+    "static/media/radar-sound-effect.mp3": "/static/media/radar-sound-effect.fee6dce72a31b1ce3ccb.mp3",
+    "index.html": "/index.html",
+    "main.ff3e6be5.css.map": "/static/css/main.ff3e6be5.css.map",
+    "main.c7be3b02.js.map": "/static/js/main.c7be3b02.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ff3e6be5.css",
+    "static/js/main.c7be3b02.js"
+  ]
+}
